@@ -590,11 +590,14 @@ namespace luadec.IR
                     {
                         if (lastIndeterminantRet == null)
                         {
-                            throw new Exception("Error: Indeterminant return without preceding indeterminant return function call");
+                            Console.WriteLine("Error: Indeterminant return without preceding indeterminant return function call");
                         }
-                        for (uint r = ret.BeginRet; r <= lastIndeterminantRet.Regnum; r++)
+                        else
                         {
-                            ret.ReturnExpressions.Add(new IdentifierReference(table.GetRegister(r)));
+                            for (uint r = ret.BeginRet; r <= lastIndeterminantRet.Regnum; r++)
+                            {
+                                ret.ReturnExpressions.Add(new IdentifierReference(table.GetRegister(r)));
+                            }
                         }
                     }
                     if (i is Assignment a && a.Left.Count() == 1 && !a.Left[0].HasIndex && a.Right is FunctionCall fc && fc.IsIndeterminantReturnCount)
@@ -1082,9 +1085,9 @@ namespace luadec.IR
                             continue;
                         }
 
-                        if (!recentlyUsed.ContainsKey(use.OriginalIdentifier))
+                        if (!recentlyUsed.ContainsKey(use.OriginalIdentifier != null ? use.OriginalIdentifier : new Identifier()))
                         {
-                            recentlyUsed.Add(use.OriginalIdentifier, use);
+                            recentlyUsed.Add(use.OriginalIdentifier != null ? use.OriginalIdentifier : new Identifier(), use);
                         }
                         else
                         {
@@ -2765,7 +2768,7 @@ namespace luadec.IR
                         }
 
                         // Extract the initializer variable definition
-                        if (loopInitializer.Instructions[loopInitializer.Instructions.Count - 2] is Assignment initassn)
+                        if (loopInitializer.Instructions[loopInitializer.Instructions.Count > 2 ? loopInitializer.Instructions.Count - 2 : loopInitializer.Instructions.Count - 1] is Assignment initassn)
                         {
                             nfor.Initial = initassn;
                             if (initassn.IsLocalDeclaration)

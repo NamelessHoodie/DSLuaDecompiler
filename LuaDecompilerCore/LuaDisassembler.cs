@@ -2117,7 +2117,7 @@ namespace luadec
                                 instructions.Add(new IR.PlaceholderInstruction(($@"{OpPropertiesHKS[opcode].OpName} {a} {(sbx & 0x10000) >> 16} {sbx & 0xFFFF}")));
                                 break;
                         }
-                        throw new Exception($@"Unimplemented opcode {OpPropertiesHKS[opcode].OpName}");
+                        //throw new Exception($@"Unimplemented opcode {OpPropertiesHKS[opcode].OpName}");
                         if (OpPropertiesHKS[opcode].OpName == null)
                         {
                             Console.WriteLine(opcode);
